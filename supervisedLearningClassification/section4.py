@@ -47,6 +47,8 @@ https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html
 df_X = pd.DataFrame(iris.data, columns = iris.feature_names)
 
 df_y = pd.DataFrame(iris.target, columns=["iris_name"])
+print(df_X.shape)
+print(df_y.shape)
 
 df_all = pd.concat([df_X, df_y], axis=1)
 df_all
@@ -57,6 +59,7 @@ print(df_all.describe())
 sns.heatmap(df_all.corr())
 
 sns.pairplot(df_all)
+plt.show()
 
 
 def describe_scatter(df_X, df_y, i, j):
@@ -65,7 +68,8 @@ def describe_scatter(df_X, df_y, i, j):
 
     X1, X2 = df_X[df_X.columns[i]], df_X[df_X.columns[j]]
     #https://matplotlib.org/users/colormaps.html
-    plt.scatter(X1, X2, c=df_y, cmap=plt.cm.Accent)
+
+    plt.scatter(X1, X2, c=iris.target, cmap=plt.cm.Accent)
 
     plt.xlabel(df_X.columns[i])
     plt.ylabel(df_X.columns[j])
@@ -79,6 +83,7 @@ def describe_scatter(df_X, df_y, i, j):
     plt.ylim(x2_min, x2_max)
     plt.xticks(())
     plt.yticks(())
+    plt.show()
 
 describe_scatter(df_X, df_y, 0, 1)
 
@@ -119,6 +124,7 @@ plt.pcolormesh(xx, yy, result_all_mesh, cmap=plt.cm.tab10)
 
 #精度確認のために、教師データをプロット
 plt.scatter(X[:, 0], X[:, 1], c=y, edgecolors='k', cmap=plt.cm.tab10)
+plt.show()
 
 """
 # Lesson4 SVM
@@ -198,3 +204,11 @@ grid_cv = GridSearchCV(MLPClassifier(random_state=5), tuned_parameters, cv=5)
 describe_scatter_cgrid(grid_cv, X, y)
 
 grid_cv.best_params_
+
+
+x = np.random.rand(100)
+y = np.random.rand(100)
+col = np.linspace(0, 1, 100)
+plt.scatter(x, y, c=col, cmap="spring")
+plt.colorbar()  #カラーバーの表示
+plt.show()
