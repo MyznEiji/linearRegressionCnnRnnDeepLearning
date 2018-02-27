@@ -60,18 +60,21 @@ https: // pandas.pydata.org / pandas - docs / stable / generated / pandas.DataFr
 df_X = pd.DataFrame(data=wine_data.data, columns=wine_data.feature_names)
 df_y = pd.DataFrame(data=wine_data.target, columns=["wine class"])
 
-df_X
+
+type(wine_data.target)
+wine_data.target.shape
+type(df_y)
 
 # 前回定義した可視化関数
 
 
-def describe_scatter(X, y, i, j):
+def describe_scatter(X, y, c, i, j):
     plt.figure(2, figsize=(8, 6))
 
     # プロット
     # カラーを選択
     X1, X2 = X[X.columns[i]], X[X.columns[j]]
-    plt.scatter(X1, X2, c=y, cmap=plt.cm.tab10)
+    plt.scatter(X1, X2, c=c, cmap=plt.cm.tab10)
     plt.xlabel(X.columns[i])
     plt.ylabel(X.columns[j])
 
@@ -92,6 +95,7 @@ def describe_scatter(X, y, i, j):
 # 横方向の時は、axis = 1を指定。縦方向の結合は、axisの指定なしでok
 df_all = pd.concat([df_X, df_y], axis=1)
 
+
 # 相関係数を計算する
 df_all.corr()
 
@@ -99,7 +103,7 @@ sns.heatmap(df_all.corr())
 
 sns.pairplot(df_X)
 
-describe_scatter(df_X, df_y, 3, 5)
+describe_scatter(df_X, df_y, wine_data.target, 3, 5)
 
 """
 # Lesson3 主成分分析(Principal component analysis)
@@ -117,8 +121,10 @@ from sklearn.decomposition import PCA
 X_reduced = PCA(n_components=2).fit_transform(
     df_X.iloc[:, [3, 5, 6, 7, 11]].values)
 
+df_y.values
+
 plt.figure(2, figsize=(8, 6))
-plt.scatter(X_reduced[:, 0], X_reduced[:, 1], c=df_y, cmap=plt.cm.tab10)
+plt.scatter(X_reduced[:, 0], X_reduced[:, 1], c=wine_data.target, cmap=plt.cm.tab10)
 plt.show()
 
 """
@@ -141,14 +147,14 @@ X_kmeans, y_kmeans = make_blobs(n_samples=300,
                                 centers=3,
                                 shuffle=True,
                                 random_state=3)
-print(X_kmeans)
+print(X_kmeans.shape)
 print("================")
-print(y_kmeans)
+print(y_kmeans.shape)
 
 df_X_kmeans = pd.DataFrame(X_kmeans)
 df_y_kmeans = pd.DataFrame(y_kmeans)
 
-describe_scatter(df_X_kmeans, df_y_kmeans, 0, 1)
+describe_scatter(df_X_kmeans, df_y_kmeans, y_kmeans, 0, 1)
 
 """
 ## クラス数を指定したk-means クラスタリング
@@ -157,7 +163,7 @@ describe_scatter(df_X_kmeans, df_y_kmeans, 0, 1)
 from sklearn.cluster import KMeans
 
 kmeans = KMeans(n_clusters=3).fit(X_kmeans)
-describe_scatter(df_X_kmeans, pd.DataFrame(kmeans.labels_), 0, 1)
+describe_scatter(df_X_kmeans, pd.DataFrame(kmeans.labels_), y_kmeans, 0, 1)
 
 
 """
